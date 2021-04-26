@@ -12,11 +12,18 @@ import android.view.View;
 public class Cell {
     protected int x;
     protected int y;
+    //  Move
+    protected int g;
+    //  Heuristic
+    protected int h;
+    //  Cost
+    protected int f;
+    protected Cell parent;
+
     protected int size;
     protected int inset;
     protected Rect outerRect;
     protected Rect innerRect;
-
     protected Paint paint;
     protected Paint paint1;
 
@@ -53,8 +60,46 @@ public class Cell {
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
+    }
+    public int getG() { return g; }
+    public int getH() { return h; }
+    public int getF() { return f; }
+
+    public Cell getNode() {
+        return this;
+    }
+
+    public Cell getParent() {
+        return parent;
+    }
+
+    public void setXY(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public void setH(int h) {
+        this.h = h;
+    }
+
+    public void setF(int f) {
+        this.f = f;
+    }
+
+    public void setParent(Cell parent) {
+        this.parent = parent;
+    }
+
+    public static boolean isEqual(Cell s, Cell e) {
+        if (s.getX() == e.getX() && s.getY() == e.getY()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -113,4 +113,6 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
     public static int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
+
+//    public void mapCreation()
 }
