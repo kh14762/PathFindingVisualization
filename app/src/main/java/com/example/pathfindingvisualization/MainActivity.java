@@ -4,14 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
 public class MainActivity extends AppCompatActivity {
     GraphView graphView;
     MovableFloatingActionButton mfaButton;
     ScrollView scrollView;
-    CheckBox wallCheckBox, startCheckBox, endCheckBox;
+    RadioGroup radioGroup;
+    RadioButton borderRadioBtn, startRadioBtn, endRadioBtn;
 
     boolean isVisable = true;
 
@@ -23,9 +25,11 @@ public class MainActivity extends AppCompatActivity {
         mfaButton = (MovableFloatingActionButton) findViewById(R.id.movableFloatingActionButton);
         //  Add scrollView along with children
         scrollView = (ScrollView) findViewById(R.id.scrollView1);
-        wallCheckBox = (CheckBox) findViewById(R.id.checkBoxWalls);
-        startCheckBox = (CheckBox) findViewById(R.id.checkBoxStart);
-        endCheckBox = (CheckBox) findViewById(R.id.checkBoxEnd);
+        //  Add radio group and buttons
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        borderRadioBtn = (RadioButton) findViewById(R.id.borderRadioBtn);
+        startRadioBtn = (RadioButton) findViewById(R.id.startRadioBtn);
+        endRadioBtn = (RadioButton) findViewById(R.id.endRadioBtn);
     }
 
     public void onMfaButtonClick(View view) {
@@ -38,9 +42,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onCheckBoxWallsClicked(View view) {
-        if (wallCheckBox.isChecked()) {
+    public void onRadioButtonChecked(View view) {
+
+        if (borderRadioBtn.isChecked()) {
             graphView.setWallsClicked(true);
+
+            graphView.setStartClicked(false);
+            graphView.setEndClicked(false);
+        } else if (startRadioBtn.isChecked()) {
+            graphView.setStartClicked(true);
+
+            graphView.setWallsClicked(false);
+            graphView.setEndClicked(false);
+        } else if (endRadioBtn.isChecked()) {
+            graphView.setEndClicked(true);
+
+            graphView.setStartClicked(false);
+            graphView.setWallsClicked(false);
         } else {
             graphView.setWallsClicked(false);
         }

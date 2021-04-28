@@ -49,7 +49,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
                 cellArray.add(new Cell(context, j, i, cellSize));
             }
         }
-        pathFinding = new AStarPathFinding(cellSize);
+        pathFinding = new AStarPathFinding(this, cellSize, startCell, endCell);
         setFocusable(true);
     }
 
@@ -95,14 +95,19 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
                     return false;
             }
         } else if (getStartClicked()) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    addStart(event);
-                    return true;
-                default:
-                    return false;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                addStart(event);
+                return true;
             }
+            return false;
+        } else if (getEndClicked()) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                addEnd(event);
+                return true;
+            }
+            return false;
         }
+
         return super.onTouchEvent(event);
     }
 
@@ -145,8 +150,11 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
             Cell cell = cellArray.get(i);
             if (cell.isTouched(event.getX(), event.getY()) && startCell == null) {
                 cell.setColor(Color.BLUE);
-            } else {
-
+                startCell = cell;
+            } else if (cell.isTouched(event.getX(), event.getY()) && startCell != null){
+                startCell.setColor(Color.LTGRAY);
+                cell.setColor(Color.BLUE);
+                startCell = cell;
             }
 
         }
@@ -157,6 +165,20 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
     }
     public void setEndClicked(boolean endClicked) {
         this.endClicked = endClicked;
+    }
+    public void addEnd(MotionEvent event) {
+        for (int i = cellArray.size() - 1; i >= 0; i--) {
+            Cell cell = cellArray.get(i);
+            if (cell.isTouched(event.getX(), event.getY()) && endCell == null) {
+                cell.setColor(Color.RED);
+                endCell = cell;
+            } else if (cell.isTouched(event.getX(), event.getY()) && endCell != null){
+                endCell.setColor(Color.LTGRAY);
+                cell.setColor(Color.RED);
+                endCell = cell;
+            }
+
+        }
     }
 
     public AStarPathFinding getPathFinding() {
