@@ -53,10 +53,6 @@ public class Cell {
         return (x2 > x && x2 < x + size && y2 > y && y2 < y + size);
     }
 
-    public void changeColor() {
-        paint1.setColor(Color.BLACK);
-    }
-
     public int getX() {
         return x;
     }
@@ -101,5 +97,13 @@ public class Cell {
             return true;
         }
         return false;
+    }
+
+    public Paint getPaint() {
+        return paint1;
+    }
+
+    public void setColor(int color) {
+        this.getPaint().setColor(color);
     }
 }

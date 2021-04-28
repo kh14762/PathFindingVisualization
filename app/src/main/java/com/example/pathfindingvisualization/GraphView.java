@@ -27,6 +27,10 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
     private int cellSize = 50;
     private List<Cell> cellArray;
     private GameLoop gameLoop;
+    private AStarPathFinding pathFinding;
+    Cell startCell, endCell;
+
+    private boolean wallsClicked, startClicked, endClicked;
 
     public GraphView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,7 +49,7 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
                 cellArray.add(new Cell(context, j, i, cellSize));
             }
         }
-
+        pathFinding = new AStarPathFinding(cellSize);
         setFocusable(true);
     }
 
@@ -76,29 +80,28 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (getWallsClicked()) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    addWalls(event);
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    addWalls(event);
+                    break;
+                case MotionEvent.ACTION_UP:
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                for (int i = cellArray.size() - 1; i >= 0; i--) {
-                    Cell cell = cellArray.get(i);
-                    if (cell.isTouched(event.getX(), event.getY())) {
-                        cell.changeColor();
-                    }
-                }
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                for (int i = cellArray.size() - 1; i >= 0; i--) {
-                    Cell cell = cellArray.get(i);
-                    if (cell.isTouched(event.getX(), event.getY())) {
-                        cell.changeColor();
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-
-                break;
-            default:
-                return false;
+                    break;
+                default:
+                    return false;
+            }
+        } else if (getStartClicked()) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    addStart(event);
+                    return true;
+                default:
+                    return false;
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -114,5 +117,53 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
+    public boolean getWallsClicked() {
+        return wallsClicked;
+    }
+    public void setWallsClicked(boolean wallsClicked) {
+        this.wallsClicked = wallsClicked;
+    }
+
+    public void addWalls(MotionEvent event) {
+        for (int i = cellArray.size() - 1; i >= 0; i--) {
+            Cell cell = cellArray.get(i);
+            if (cell.isTouched(event.getX(), event.getY())) {
+                cell.setColor(Color.BLACK);
+            }
+            // add to pathFinding.borderList
+        }
+    }
+
+    public boolean getStartClicked() {
+        return startClicked;
+    }
+    public void setStartClicked(boolean startClicked) {
+        this.startClicked = startClicked;
+    }
+    public void addStart(MotionEvent event) {
+        for (int i = cellArray.size() - 1; i >= 0; i--) {
+            Cell cell = cellArray.get(i);
+            if (cell.isTouched(event.getX(), event.getY()) && startCell == null) {
+                cell.setColor(Color.BLUE);
+            } else {
+
+            }
+
+        }
+    }
+
+    public boolean getEndClicked() {
+        return endClicked;
+    }
+    public void setEndClicked(boolean endClicked) {
+        this.endClicked = endClicked;
+    }
+
+    public AStarPathFinding getPathFinding() {
+        return pathFinding;
+    }
+    public void setPathFinding(AStarPathFinding pathFinding) {
+        this.pathFinding = pathFinding;
+    }
 //    public void mapCreation()
 }
