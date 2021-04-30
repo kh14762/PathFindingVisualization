@@ -75,7 +75,7 @@ public class AStarPathFinding {
             return;
         }
 
-        // Create an open node with the available x and y
+        // Find an open cell with the avaliable X and Y coords
         // coordinates
         openCell = new Cell(context, possibleX, possibleY, cellSize);
 
@@ -170,6 +170,14 @@ public class AStarPathFinding {
             openList.add(cell);
         } else if (!checkOpenDuplicate(cell)){
             openList.add(cell);
+        }
+    }
+
+    public void removeOpen(Cell cell) {
+        for (int i = 0; i < openList.size(); i++) {
+            if (cell.getX() == openList.get(i).getX() && cell.getY() == openList.get(i).getY()) {
+                openList.remove(i);
+            }
         }
     }
 

@@ -1,4 +1,5 @@
 package com.example.pathfindingvisualization;
 
-public class Dijkstras {
+public class BreadthFirstSearch {
+
 }
