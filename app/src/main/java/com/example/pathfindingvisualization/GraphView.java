@@ -8,10 +8,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
@@ -20,6 +22,8 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
     private List<Cell> cellList;
     private GameLoop gameLoop;
     Cell startCell, endCell;
+    List<Cell> borderList;
+    BreadthFirstSearch bfs;
 
     private boolean wallsClicked, startClicked, endClicked;
 
@@ -33,13 +37,11 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
 
         //  Add gameLoop
         gameLoop = new GameLoop(this, surfaceHolder);
-        //  Add many cells
-        cellList = new ArrayList<>();
-        for (int i = 0; i < getScreenHeight(); i += cellSize) {
-            for (int j = 0; j < getScreenWidth(); j += cellSize) {
-                cellList.add(new Cell(context, j, i, cellSize));
-            }
-        }
+        //  Add cells to view
+        createBlankGraph();
+        //  Add BorderList
+        borderList = new ArrayList<>();
+
         setFocusable(true);
     }
 
@@ -104,11 +106,11 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
     }
 
-    public static int getScreenWidth() {
+    public int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
-    public static int getScreenHeight() {
+    public int getScreenHeight() {
         return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 
@@ -126,9 +128,11 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
                 cell.setColor(Color.BLACK);
                 // add to pathFinding.borderList
                 //if there is no duplicate cell in border list add
-//                if (!pathFinding.checkBorderDuplicate(cell)) {
-//                    pathFinding.borderList.add(cell);
-//                }
+                if (borderList == null) {
+                    borderList.add(cell);
+                } else if (!checkBorderDuplicate(cell)) {
+                    borderList.add(cell);
+                }
             }
 
         }
@@ -176,4 +180,38 @@ public class GraphView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public List<Cell> getCellList() {
+        return cellList;
+    }
+
+    public int getCellSize() {
+        return  cellSize;
+    }
+
+    public void runBFS() {
+            bfs = new BreadthFirstSearch(this.getContext(), this, gameLoop, startCell);
+            bfs.bfs(startCell);
+
+    }
+
+    public List<Cell> getBorderList() {
+        return borderList;
+    }
+    public boolean checkBorderDuplicate(Cell cell) {
+        for (int i = 0; i < borderList.size(); i++) {
+            if (cell.getX() == borderList.get(i).getX() && cell.getY() == borderList.get(i).getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void createBlankGraph() {
+        cellList = new ArrayList<>();
+        for (int i = 0; i < getScreenHeight(); i += cellSize) {
+            for (int j = 0; j < getScreenWidth(); j += cellSize) {
+                cellList.add(new Cell(this.getContext(), j, i, cellSize));
+            }
+        }
+    }
 }

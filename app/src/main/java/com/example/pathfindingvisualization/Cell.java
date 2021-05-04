@@ -27,6 +27,8 @@ public class Cell {
     protected Paint paint;
     protected Paint paint1;
 
+    protected int distance;
+
     public Cell(Context context, int x, int y, int size) {
         this.x = x;
         this.y = y;
@@ -62,8 +64,12 @@ public class Cell {
     public int getG() { return g; }
     public int getH() { return h; }
     public int getF() { return f; }
+    public int getDistance() { return distance; }
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
 
-    public Cell getNode() {
+    public Cell getCell() {
         return this;
     }
 

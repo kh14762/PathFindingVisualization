@@ -2,11 +2,15 @@ package com.example.pathfindingvisualization;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     GraphView graphView;
@@ -14,8 +18,9 @@ public class MainActivity extends AppCompatActivity {
     ScrollView scrollView;
     RadioGroup radioGroup;
     RadioButton borderRadioBtn, startRadioBtn, endRadioBtn;
+    Button runBFS;
 
-    boolean isVisable = true;
+    boolean isVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,17 +35,24 @@ public class MainActivity extends AppCompatActivity {
         borderRadioBtn = (RadioButton) findViewById(R.id.borderRadioBtn);
         startRadioBtn = (RadioButton) findViewById(R.id.startRadioBtn);
         endRadioBtn = (RadioButton) findViewById(R.id.endRadioBtn);
+        runBFS = (Button) findViewById(R.id.button);
+    }
+
+    public void onBfsButtonClicked(View view) {
+            new myAsynchTask().execute();
+
     }
 
     public void onMfaButtonClick(View view) {
-        if (isVisable) {
+        if (isVisible) {
             scrollView.setVisibility(View.INVISIBLE);
-            isVisable = false;
+            isVisible = false;
         } else {
             scrollView.setVisibility(View.VISIBLE);
-            isVisable = true;
+            isVisible = true;
         }
     }
+
 
     public void onRadioButtonChecked(View view) {
 
@@ -62,6 +74,34 @@ public class MainActivity extends AppCompatActivity {
         } else {
             graphView.setWallsClicked(false);
         }
+    }
+
+    class myAsynchTask extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            scrollView.setVisibility(View.INVISIBLE);
+            isVisible = false;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (graphView.startCell != null) {
+                graphView.runBFS();
+            }
+           return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+            if (graphView.startCell == null) {
+                Toast.makeText(graphView.getContext(), "No Start Node Selected!", Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 
     public void onCheckBoxStartClicked() {

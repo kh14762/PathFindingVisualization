@@ -3,6 +3,8 @@ package com.example.pathfindingvisualization;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import java.util.logging.Handler;
+
 public class GameLoop extends Thread {
     static final double MAX_UPS = 30.0;
     static final double UPS_PERIOD = (1E+3)/MAX_UPS;
